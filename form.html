@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submit Form to Google Sheets</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      padding: 40px;
+    }
+
+    .container {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 6px;
+      color: #444;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #response {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Submit Your Details</h2>
+    <form id="dataForm">
+      <label for="name">Name</label>
+      <input type="text" name="name" required />
+
+      <label for="address">Address</label>
+      <input type="text" name="address" required />
+
+      <label for="city">City</label>
+      <select name="city" required>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Rajkot">Rajkot</option>
+        <option value="Surat">Surat</option>
+      </select>
+
+      <label for="mobile">Mobile Number</label>
+      <input type="text" name="mobile" required />
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <p id="response"></p>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbx3kNqebQKgp8PPhUX1qjzbQGiomr4jCH7aWKJO1EzK2fsg7xD22yc7Q7HjSfYK8gQj5w/exec";
+
+    document.getElementById('dataForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => response.text())
+        .then(res => {
+          document.getElementById("response").innerText = "✅ Data Submitted!";
+          form.reset();
+        })
+        .catch(error => {
+          document.getElementById("response").innerHTML = "<span class='error'>❌ Error submitting!</span>";
+          console.error('Error!', error.message);
+        });
+    });
+  </script>
+</body>
+</html>

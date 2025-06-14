@@ -113,53 +113,53 @@
     <p id="response"></p>
   </div>
 
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbx3kNqebQKgp8PPhUX1qjzbQGiomr4jCH7aWKJO1EzK2fsg7xD22yc7Q7HjSfYK8gQj5w/exec";
+<script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbx3kNqebQKgp8PPhUX1qjzbQGiomr4jCH7aWKJO1EzK2fsg7xD22yc7Q7HjSfYK8gQj5w/exec";
 
-    document.getElementById('dataForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
+  document.getElementById('dataForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
 
-      fetch(scriptURL, { method: 'POST', body: formData })
-        .then(response => response.text())
-        .then(res => {
-          document.getElementById("response").innerText = "✅ Data Submitted!";
-          form.reset();
-        })
-        .catch(error => {
-          document.getElementById("response").innerHTML = "<span class='error'>❌ Error submitting!</span>";
-          console.error('Error!', error.message);
+    fetch(scriptURL, { method: 'POST', body: formData })
+      .then(response => response.text())
+      .then(res => {
+        document.getElementById("response").innerText = "✅ Data Submitted!";
+        form.reset();
+        loadLatestData(); // reload view after new submission
+      })
+      .catch(error => {
+        document.getElementById("response").innerHTML = "<span class='error'>❌ Error submitting!</span>";
+        console.error('Error!', error.message);
+      });
+  });
 
-              function loadLatestData() {
-      fetch(scriptURL)
-        .then(res => res.json())
-        .then(data => {
-          const tbody = document.querySelector("#dataTable tbody");
-          tbody.innerHTML = ""; // clear previous
+  function loadLatestData() {
+    fetch(scriptURL)
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector("#dataTable tbody");
+        tbody.innerHTML = ""; // clear previous
 
-          data.forEach(row => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${row.Name}</td>
-              <td>${row.Address}</td>
-              <td>${row.City}</td>
-              <td>${row.Mobile}</td>
-            `;
-            tbody.appendChild(tr);
-          });
+        data.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.Name}</td>
+            <td>${row.Address}</td>
+            <td>${row.City}</td>
+            <td>${row.Mobile}</td>
+          `;
+          tbody.appendChild(tr);
         });
-    }
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }
 
-    // Load latest data on page load
-    loadLatestData();
+  // Load latest data on page load
+  loadLatestData();
+</script>
 
-          form.reset();
-loadLatestData(); // reload view after new submission
-
-
-        });
-    });
-  </script>
 </body>
 </html>

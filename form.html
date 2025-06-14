@@ -93,6 +93,21 @@
       <input type="text" name="mobile" required />
 
       <button type="submit">Submit</button>
+
+          <h3>Latest Entries</h3>
+    <table id="dataTable" border="1" style="width:100%; margin-top:20px; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>Mobile</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
     </form>
 
     <p id="response"></p>
@@ -115,6 +130,34 @@
         .catch(error => {
           document.getElementById("response").innerHTML = "<span class='error'>❌ Error submitting!</span>";
           console.error('Error!', error.message);
+
+              function loadLatestData() {
+      fetch(scriptURL)
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector("#dataTable tbody");
+          tbody.innerHTML = ""; // clear previous
+
+          data.forEach(row => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${row.Name}</td>
+              <td>${row.Address}</td>
+              <td>${row.City}</td>
+              <td>${row.Mobile}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    // Load latest data on page load
+    loadLatestData();
+
+          form.reset();
+loadLatestData(); // reload view after new submission
+
+
         });
     });
   </script>
